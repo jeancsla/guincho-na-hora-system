@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bunx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint --no-git)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-Command bun\")",
+      "Bash(npm install -g bun)",
+      "Bash(bun --version)",
+      "Bash(bun create next-app . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint --no-git)",
+      "Bash(bun add @supabase/supabase-js @supabase/ssr react-hook-form @hookform/resolvers zod recharts @tanstack/react-table sonner date-fns lucide-react)",
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(npx shadcn@latest init)",
+      "Bash(printf \"y\\\\ny\\\\n\")",
+      "Bash(npx shadcn@latest init -y)",
+      "Bash(npx shadcn@latest init --yes)",
+      "Bash(bun add class-variance-authority clsx tailwind-merge tailwindcss-animate @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-label @radix-ui/react-popover @radix-ui/react-select @radix-ui/react-separator @radix-ui/react-slot @radix-ui/react-tabs @radix-ui/react-toast @radix-ui/react-tooltip @radix-ui/react-alert-dialog @radix-ui/react-scroll-area @radix-ui/react-avatar cmdk)",
+      "Bash(bun run build)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls /c/Users/User/Desktop/projetos/gnh-system/node_modules/.bin/next*)"
+    ]
+  }
+}
