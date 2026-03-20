@@ -4,6 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface Props {
   data: Array<{ mes: string; valor: number }>;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function MonthlyRevenueChart({ data, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -38,15 +40,15 @@ export function MonthlyRevenueChart({ data, loading }: Props) {
                 <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
-            <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#71717a" }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={c.grid} />
+            <XAxis dataKey="mes" tick={{ fontSize: 11, fill: c.tick }} />
             <YAxis
               tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
-              tick={{ fontSize: 11, fill: "#71717a" }}
+              tick={{ fontSize: 11, fill: c.tick }}
             />
             <Tooltip
               formatter={(v) => formatCurrency(Number(v))}
-              contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
+              contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
             />
             <Area
               type="monotone"

@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import type { YearComparisonPoint } from "@/types";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface Props {
   data: YearComparisonPoint[];
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export function YearComparisonChart({ data, year, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -53,17 +55,17 @@ export function YearComparisonChart({ data, year, loading }: Props) {
                 <stop offset="95%" stopColor="#a1a1aa" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
-            <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#71717a" }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={c.grid} />
+            <XAxis dataKey="mes" tick={{ fontSize: 11, fill: c.tick }} />
             <YAxis
               tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
-              tick={{ fontSize: 11, fill: "#71717a" }}
+              tick={{ fontSize: 11, fill: c.tick }}
             />
             <Tooltip
               formatter={(v, name) => [formatCurrency(Number(v)), String(name)]}
-              contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
+              contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend wrapperStyle={{ fontSize: 12, color: c.tick }} />
             <Area
               type="monotone"
               dataKey="anoAtual"

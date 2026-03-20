@@ -84,7 +84,7 @@ export function YTDSummaryCard({ data, year, loading }: Props) {
                     </span>
                     <span className="font-medium tabular-nums">{formatCurrency(v.valor)}</span>
                   </div>
-                  <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-red-600 rounded-full transition-all"
                       style={{ width: `${pct.toFixed(1)}%` }}

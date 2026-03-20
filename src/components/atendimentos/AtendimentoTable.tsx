@@ -178,7 +178,7 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
 
   if (loading) {
     return (
-      <div className="rounded-lg border bg-white dark:bg-zinc-900 dark:border-zinc-800 overflow-hidden">
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
         <Table2>
           <TableHeader2>
             <TableRow2>

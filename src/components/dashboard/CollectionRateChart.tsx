@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface CollectionData {
   pago: number;
@@ -25,6 +26,7 @@ const SEGMENTS = [
 ];
 
 export function CollectionRateChart({ data, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -69,7 +71,10 @@ export function CollectionRateChart({ data, loading }: Props) {
                     <Cell key={i} fill={entry.color} strokeWidth={0} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v) => formatCurrency(Number(v))} />
+                <Tooltip
+                  formatter={(v) => formatCurrency(Number(v))}
+                  contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
+                />
               </PieChart>
             </ResponsiveContainer>
             <p className="text-center -mt-2 text-lg font-bold tabular-nums">

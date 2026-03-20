@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import type { StatusPagamento } from "@/types";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface Props {
   data: Array<{ status: StatusPagamento; total: number; valor: number }>;
@@ -27,6 +28,7 @@ const STATUS_LABELS: Record<StatusPagamento, string> = {
 };
 
 export function PaymentStatusChart({ data, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -80,9 +82,9 @@ export function PaymentStatusChart({ data, loading }: Props) {
                   `${Number(v)} atend. (${formatCurrency(Number(props?.payload?.valor ?? 0))})`,
                   String(props?.name ?? ""),
                 ]}
-                contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
+                contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
               />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Legend wrapperStyle={{ fontSize: 12, color: c.tick }} />
             </PieChart>
           </ResponsiveContainer>
         )}

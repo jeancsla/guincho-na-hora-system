@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface Props {
   data: Array<{ mes: string; valor: number }>;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export function TicketTrendChart({ data, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -51,17 +53,20 @@ export function TicketTrendChart({ data, loading }: Props) {
             <AreaChart data={data} margin={{ right: 16 }}>
               <defs>
                 <linearGradient id="gradTicket" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#18181b" stopOpacity={0.12} />
-                  <stop offset="95%" stopColor="#18181b" stopOpacity={0} />
+                  <stop offset="5%" stopColor={c.mutedGradient} stopOpacity={0.18} />
+                  <stop offset="95%" stopColor={c.mutedGradient} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
-              <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#71717a" }} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={c.grid} />
+              <XAxis dataKey="mes" tick={{ fontSize: 11, fill: c.tick }} />
               <YAxis
                 tickFormatter={(v) => `R$${(v / 1000).toFixed(1)}k`}
-                tick={{ fontSize: 11, fill: "#71717a" }}
+                tick={{ fontSize: 11, fill: c.tick }}
               />
-              <Tooltip formatter={(v) => formatCurrency(Number(v))} />
+              <Tooltip
+                formatter={(v) => formatCurrency(Number(v))}
+                contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
+              />
               {avg > 0 && (
                 <ReferenceLine
                   y={avg}
@@ -74,10 +79,10 @@ export function TicketTrendChart({ data, loading }: Props) {
                 type="monotone"
                 dataKey="valor"
                 name="Ticket médio"
-                stroke="#18181b"
+                stroke={c.mutedLine}
                 strokeWidth={2}
                 fill="url(#gradTicket)"
-                dot={{ r: 3, fill: "#18181b" }}
+                dot={{ r: 3, fill: c.mutedLine }}
                 activeDot={{ r: 5, fill: "#dc2626" }}
               />
             </AreaChart>

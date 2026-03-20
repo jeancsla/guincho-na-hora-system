@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
+import { useChartColors } from "@/hooks/useChartColors";
 
 interface Props {
   data: Array<{ nome: string; valor: number }>;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function RevenueByClientChart({ data, loading }: Props) {
+  const c = useChartColors();
   if (loading) {
     return (
       <Card>
@@ -37,16 +39,16 @@ export function RevenueByClientChart({ data, loading }: Props) {
         ) : (
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={data} layout="vertical" margin={{ left: 20, right: 30 }}>
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e4e4e7" />
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={c.grid} />
               <XAxis
                 type="number"
                 tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
-                tick={{ fontSize: 11, fill: "#71717a" }}
+                tick={{ fontSize: 11, fill: c.tick }}
               />
-              <YAxis type="category" dataKey="nome" width={120} tick={{ fontSize: 11, fill: "#52525b" }} />
+              <YAxis type="category" dataKey="nome" width={120} tick={{ fontSize: 11, fill: c.tick }} />
               <Tooltip
                 formatter={(v) => formatCurrency(Number(v))}
-                contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
+                contentStyle={{ backgroundColor: c.tooltipBg, border: `1px solid ${c.tooltipBorder}`, borderRadius: 6, color: c.tooltipText }}
               />
               <Bar dataKey="valor" name="Receita" fill="#dc2626" radius={[0, 4, 4, 0]} />
             </BarChart>
