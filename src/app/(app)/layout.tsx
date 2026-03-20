@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-screen bg-zinc-50">
+    <div className="flex h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-900">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Header userEmail={user.email} />

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, ChevronRight } from "lucide-react";
+import { LogOut, ChevronRight, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,6 +26,7 @@ const breadcrumbMap: Record<string, string> = {
   "/equipamentos":      "Equipamentos",
   "/financeiro":        "Financeiro",
   "/importar":          "Importar Dados",
+  "/configuracoes":     "Configurações",
 };
 
 function buildCrumbs(pathname: string) {
@@ -121,6 +122,14 @@ export function Header({ userEmail }: HeaderProps) {
             <p className="text-xs font-semibold text-zinc-900">Conta</p>
             <p className="text-xs text-muted-foreground truncate">{userEmail ?? "—"}</p>
           </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => router.push("/configuracoes")}
+            className="cursor-pointer gap-2"
+          >
+            <Settings className="h-4 w-4" />
+            Configurações
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={handleLogout}

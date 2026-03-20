@@ -11,6 +11,7 @@ import {
   Wrench,
   DollarSign,
   Upload,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,13 +24,14 @@ const navItems = [
   { href: "/equipamentos",  label: "Equipamentos",    icon: Wrench },
   { href: "/financeiro",    label: "Financeiro",      icon: DollarSign },
   { href: "/importar",      label: "Importar",        icon: Upload },
+  { href: "/configuracoes", label: "Configurações",   icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-60 bg-zinc-950 text-white flex flex-col min-h-screen border-r border-zinc-800/60 shrink-0">
+    <aside className="w-60 bg-zinc-950 text-white flex flex-col h-full border-r border-zinc-800/60 shrink-0">
       {/* Logo */}
       <div className="h-16 flex items-center px-5 border-b border-zinc-800/60 shrink-0">
         <div className="flex items-center gap-3">
