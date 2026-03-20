@@ -46,25 +46,34 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
     onChange({ ...filters, [key]: value });
   }
 
-  const hasActiveFilters = Object.values(filters).some((v) => v !== "");
+  const activeCount = Object.values(filters).filter((v) => v !== "").length;
+  const hasActiveFilters = activeCount > 0;
 
   return (
-    <div className="bg-white border rounded-lg p-4 space-y-3">
+    <div className={`bg-white border rounded-lg p-4 space-y-3 transition-colors ${hasActiveFilters ? "border-zinc-300 shadow-sm" : ""}`}>
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
         <Input
           placeholder="Buscar por nº atendimento, NF, nº pedido, observação..."
           value={filters.search}
           onChange={(e) => set("search", e.target.value)}
-          className="pl-9"
+          className="pl-9 h-9 text-sm"
         />
+        {filters.search && (
+          <button
+            onClick={() => set("search", "")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Filters row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-2 items-end">
         <Select value={filters.cliente_id || "all"} onValueChange={(v) => set("cliente_id", v === "all" ? "" : v)}>
-          <SelectTrigger>
+          <SelectTrigger className={`h-9 text-sm ${filters.cliente_id ? "border-zinc-400 text-zinc-900" : ""}`}>
             <SelectValue placeholder="Cliente" />
           </SelectTrigger>
           <SelectContent>
@@ -76,7 +85,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
         </Select>
 
         <Select value={filters.motorista_id || "all"} onValueChange={(v) => set("motorista_id", v === "all" ? "" : v)}>
-          <SelectTrigger>
+          <SelectTrigger className={`h-9 text-sm ${filters.motorista_id ? "border-zinc-400 text-zinc-900" : ""}`}>
             <SelectValue placeholder="Motorista" />
           </SelectTrigger>
           <SelectContent>
@@ -88,7 +97,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
         </Select>
 
         <Select value={filters.equipamento_id || "all"} onValueChange={(v) => set("equipamento_id", v === "all" ? "" : v)}>
-          <SelectTrigger>
+          <SelectTrigger className={`h-9 text-sm ${filters.equipamento_id ? "border-zinc-400 text-zinc-900" : ""}`}>
             <SelectValue placeholder="Equipamento" />
           </SelectTrigger>
           <SelectContent>
@@ -100,7 +109,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
         </Select>
 
         <Select value={filters.status_pagamento || "all"} onValueChange={(v) => set("status_pagamento", v === "all" ? "" : v)}>
-          <SelectTrigger>
+          <SelectTrigger className={`h-9 text-sm ${filters.status_pagamento ? "border-zinc-400 text-zinc-900" : ""}`}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -112,24 +121,40 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
           </SelectContent>
         </Select>
 
-        <Input
-          type="date"
-          value={filters.data_inicio}
-          onChange={(e) => set("data_inicio", e.target.value)}
-          title="Data início"
-        />
-        <Input
-          type="date"
-          value={filters.data_fim}
-          onChange={(e) => set("data_fim", e.target.value)}
-          title="Data fim"
-        />
+        <div className="space-y-1">
+          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide px-0.5">De</p>
+          <Input
+            type="date"
+            value={filters.data_inicio}
+            onChange={(e) => set("data_inicio", e.target.value)}
+            className={`h-9 text-sm ${filters.data_inicio ? "border-zinc-400 text-zinc-900" : ""}`}
+          />
+        </div>
+        <div className="space-y-1">
+          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide px-0.5">Até</p>
+          <Input
+            type="date"
+            value={filters.data_fim}
+            onChange={(e) => set("data_fim", e.target.value)}
+            className={`h-9 text-sm ${filters.data_fim ? "border-zinc-400 text-zinc-900" : ""}`}
+          />
+        </div>
 
-        {hasActiveFilters && (
-          <Button variant="ghost" onClick={onReset} className="text-muted-foreground">
-            <X className="h-4 w-4 mr-1" />
+        {hasActiveFilters ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onReset}
+            className="h-9 text-zinc-500 hover:text-zinc-800 hover:border-zinc-400 gap-1.5 self-end"
+          >
+            <X className="h-3.5 w-3.5" />
             Limpar
+            <span className="inline-flex items-center justify-center bg-zinc-900 text-white text-[10px] font-bold rounded-full h-4 w-4">
+              {activeCount}
+            </span>
           </Button>
+        ) : (
+          <div />
         )}
       </div>
     </div>

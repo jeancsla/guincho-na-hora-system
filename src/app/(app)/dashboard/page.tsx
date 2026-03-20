@@ -49,10 +49,19 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
 
+      {/* ── Page header ─────────────────────────────────────────────────────── */}
+      <div>
+        <h1 className="text-xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
+        <p className="text-sm text-zinc-500 mt-0.5">Acompanhe os indicadores operacionais e financeiros</p>
+      </div>
+
       {/* ── Section: Period KPIs ─────────────────────────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Visão do Mês</h2>
+          <div>
+            <h2 className="text-base font-semibold text-zinc-900">Visão do Mês</h2>
+            <p className="text-xs text-zinc-400 mt-0.5">Indicadores do período selecionado</p>
+          </div>
           <Select value={mes} onValueChange={setMes}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Selecione o período" />
@@ -127,7 +136,10 @@ export default function DashboardPage() {
       {/* ── Section: Annual Analytics ────────────────────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Análise Anual</h2>
+          <div>
+            <h2 className="text-base font-semibold text-zinc-900">Análise Anual</h2>
+            <p className="text-xs text-zinc-400 mt-0.5">Receita por veículo, comparativo e tendências</p>
+          </div>
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Ano" />

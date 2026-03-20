@@ -72,24 +72,32 @@ export default function AtendimentosPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Atendimentos</h2>
-          {data && (
-            <p className="text-sm text-muted-foreground">
-              {data.total} registro{data.total !== 1 ? "s" : ""} encontrado{data.total !== 1 ? "s" : ""}
-            </p>
-          )}
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Atendimentos</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            {loading ? (
+              <span className="inline-block skeleton-shimmer h-3.5 w-40 rounded" />
+            ) : data ? (
+              `${data.total.toLocaleString("pt-BR")} registro${data.total !== 1 ? "s" : ""} encontrado${data.total !== 1 ? "s" : ""}`
+            ) : (
+              "Carregando…"
+            )}
+          </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportCsv}>
-            <Download className="h-4 w-4 mr-1" />
+          <Button variant="outline" size="sm" onClick={handleExportCsv} className="text-zinc-600 hover:text-zinc-900 hover:border-zinc-300">
+            <Download className="h-4 w-4 mr-1.5" />
             Exportar CSV
           </Button>
-          <Button size="sm" onClick={() => router.push("/atendimentos/novo")}>
-            <Plus className="h-4 w-4 mr-1" />
+          <Button
+            size="sm"
+            onClick={() => router.push("/atendimentos/novo")}
+            className="bg-zinc-950 hover:bg-zinc-800 text-white font-medium"
+          >
+            <Plus className="h-4 w-4 mr-1.5" />
             Novo Atendimento
           </Button>
         </div>
@@ -112,24 +120,45 @@ export default function AtendimentosPage() {
 
       {/* Pagination */}
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Página {data.page} de {data.totalPages} · {data.total} registros
+        <div className="flex items-center justify-between pt-1">
+          <p className="text-xs text-zinc-400 tabular-nums">
+            Página <span className="font-semibold text-zinc-700">{data.page}</span> de{" "}
+            <span className="font-semibold text-zinc-700">{data.totalPages}</span>
+            {" · "}
+            {data.total.toLocaleString("pt-BR")} registros
           </p>
-          <div className="flex gap-1">
+          <div className="flex items-center gap-1">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
+              className="h-8 w-8 p-0 hover:border-zinc-300"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
+            {/* Page number pills */}
+            {Array.from({ length: Math.min(data.totalPages, 5) }).map((_, idx) => {
+              const p = Math.max(1, Math.min(page - 2, data.totalPages - 4)) + idx;
+              if (p < 1 || p > data.totalPages) return null;
+              return (
+                <Button
+                  key={p}
+                  variant={p === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPage(p)}
+                  className={`h-8 w-8 p-0 text-xs font-medium ${p === page ? "bg-zinc-950 hover:bg-zinc-800 text-white" : "hover:border-zinc-300"}`}
+                >
+                  {p}
+                </Button>
+              );
+            })}
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
               disabled={page === data.totalPages}
+              className="h-8 w-8 p-0 hover:border-zinc-300"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

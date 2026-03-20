@@ -173,7 +173,7 @@ export default function ImportarPage() {
   return (
     <div className="space-y-6 max-w-5xl">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Importar Dados</h1>
+        <h1 className="text-xl font-bold tracking-tight text-zinc-900">Importar Dados</h1>
         <p className="text-muted-foreground text-sm mt-1">
           Importe o histórico de atendimentos a partir de um arquivo CSV.
         </p>
@@ -190,7 +190,7 @@ export default function ImportarPage() {
               <span
                 className={cn(
                   "font-medium",
-                  active ? "text-orange-500" : done ? "text-green-600" : "text-muted-foreground"
+                  active ? "text-red-600" : done ? "text-green-600" : "text-muted-foreground"
                 )}
               >
                 {labels[idx]}
@@ -221,8 +221,8 @@ export default function ImportarPage() {
               className={cn(
                 "border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors",
                 dragging
-                  ? "border-orange-500 bg-orange-500/5"
-                  : "border-muted-foreground/20 hover:border-orange-500/50 hover:bg-muted/10"
+                  ? "border-red-600 bg-red-600/5"
+                  : "border-muted-foreground/20 hover:border-red-600/50 hover:bg-muted/10"
               )}
             >
               <FileSpreadsheet className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
@@ -314,7 +314,7 @@ export default function ImportarPage() {
             <Button
               onClick={handleImport}
               disabled={importing}
-              className="bg-orange-500 hover:bg-orange-600 text-white"
+              className="bg-zinc-950 hover:bg-zinc-800 text-white"
             >
               {importing ? (
                 <>Importando {allRows.length.toLocaleString("pt-BR")} registros...</>
@@ -389,7 +389,7 @@ export default function ImportarPage() {
           )}
 
           <div className="flex gap-3">
-            <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Button asChild className="bg-zinc-950 hover:bg-zinc-800 text-white">
               <a href="/atendimentos">Ver Atendimentos</a>
             </Button>
             <Button variant="outline" onClick={reset}>

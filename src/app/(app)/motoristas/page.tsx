@@ -49,7 +49,7 @@ function SortBtn({
       className={`flex items-center gap-1 hover:text-foreground transition-colors ${className}`}
     >
       {label}
-      <Icon className={`h-3 w-3 ${col === active ? "text-orange-500" : "opacity-40"}`} />
+      <Icon className={`h-3 w-3 ${col === active ? "text-red-600" : "opacity-40"}`} />
     </button>
   );
 }
@@ -106,10 +106,10 @@ export default function MotoristasPage() {
   }), [motoristas]);
 
   const kpis = [
-    { label: "Motoristas", value: motoristas.length.toString(), icon: User, color: "text-blue-500" },
-    { label: "Atendimentos", value: totals.atendimentos.toLocaleString("pt-BR"), icon: TrendingUp, color: "text-orange-500" },
-    { label: "Total Faturado", value: formatCurrency(totals.faturado), icon: DollarSign, color: "text-green-500" },
-    { label: "A Receber", value: formatCurrency(totals.pendente), icon: Clock, color: "text-yellow-500" },
+    { label: "Motoristas", value: motoristas.length.toString(), icon: User, color: "text-zinc-400" },
+    { label: "Atendimentos", value: totals.atendimentos.toLocaleString("pt-BR"), icon: TrendingUp, color: "text-red-600" },
+    { label: "Total Faturado", value: formatCurrency(totals.faturado), icon: DollarSign, color: "text-emerald-600" },
+    { label: "A Receber", value: formatCurrency(totals.pendente), icon: Clock, color: "text-zinc-400" },
   ];
 
   const sortProps = { active: sortKey, dir: sortDir, onSort: handleSort };
@@ -119,11 +119,11 @@ export default function MotoristasPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Motoristas</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Motoristas</h1>
+          <p className="text-zinc-500 text-sm mt-0.5">
             {loading
               ? "Carregando..."
-              : `${motoristas.length} motoristas · ${filtered.length} exibidos`}
+              : `${motoristas.length.toLocaleString("pt-BR")} motoristas · ${filtered.length.toLocaleString("pt-BR")} exibidos`}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={fetch_} disabled={loading}>
@@ -223,8 +223,8 @@ export default function MotoristasPage() {
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
-                          <User className="h-4 w-4 text-orange-500" />
+                        <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
+                          <User className="h-4 w-4 text-red-600" />
                         </div>
                         <div>
                           <div className="font-medium leading-tight">{m.nome}</div>
@@ -276,7 +276,7 @@ export default function MotoristasPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/atendimentos?motorista_id=${m.id}`}
-                        className="flex items-center gap-1 text-orange-500 hover:text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="flex items-center gap-1 text-red-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                         title="Ver atendimentos"
                       >
                         <ArrowRight className="h-4 w-4" />

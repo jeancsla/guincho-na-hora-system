@@ -178,10 +178,31 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
 
   if (loading) {
     return (
-      <div className="space-y-2">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-12 w-full" />
-        ))}
+      <div className="rounded-lg border bg-white overflow-hidden">
+        <Table2>
+          <TableHeader2>
+            <TableRow2>
+              {["Nº", "Data", "Cliente", "Equipamento", "Motorista", "Valor", "Status", "Vencimento", ""].map((h) => (
+                <TableHead2 key={h}>{h}</TableHead2>
+              ))}
+            </TableRow2>
+          </TableHeader2>
+          <TableBody2>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <TableRow2 key={i}>
+                <TableCell2><div className="skeleton-shimmer h-4 w-16 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-20 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-32 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-24 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-28 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-16 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-5 w-20 rounded-full" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-4 w-20 rounded" /></TableCell2>
+                <TableCell2><div className="skeleton-shimmer h-7 w-7 rounded" /></TableCell2>
+              </TableRow2>
+            ))}
+          </TableBody2>
+        </Table2>
       </div>
     );
   }
@@ -191,9 +212,9 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
       <Table2>
         <TableHeader2>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow2 key={headerGroup.id}>
+            <TableRow2 key={headerGroup.id} className="bg-zinc-50/70 hover:bg-zinc-50/70">
               {headerGroup.headers.map((header) => (
-                <TableHead2 key={header.id}>
+                <TableHead2 key={header.id} className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -205,15 +226,25 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
         <TableBody2>
           {table.getRowModel().rows.length === 0 ? (
             <TableRow2>
-              <TableCell2 colSpan={columns.length} className="text-center py-12 text-muted-foreground">
-                Nenhum atendimento encontrado
+              <TableCell2 colSpan={columns.length}>
+                <div className="flex flex-col items-center gap-2 py-16 text-zinc-400">
+                  <svg className="h-10 w-10 text-zinc-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  <p className="text-sm font-medium">Nenhum atendimento encontrado</p>
+                  <p className="text-xs">Tente ajustar os filtros ou criar um novo atendimento</p>
+                </div>
               </TableCell2>
             </TableRow2>
           ) : (
             table.getRowModel().rows.map((row) => (
-              <TableRow2 key={row.id}>
+              <TableRow2
+                key={row.id}
+                className="table-row-hover cursor-pointer hover:bg-zinc-50 transition-colors"
+                onClick={() => router.push(`/atendimentos/${row.original.id}`)}
+              >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell2 key={cell.id}>
+                  <TableCell2 key={cell.id} onClick={cell.column.id === "actions" ? (e) => e.stopPropagation() : undefined}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell2>
                 ))}

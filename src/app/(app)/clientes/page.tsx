@@ -27,7 +27,7 @@ type SortDir = "asc" | "desc";
 
 function SortIcon({ col, active, dir }: { col: string; active: string; dir: SortDir }) {
   if (col !== active) return <ArrowUpDown className="h-3 w-3 opacity-40" />;
-  return dir === "asc" ? <ArrowUp className="h-3 w-3 text-orange-500" /> : <ArrowDown className="h-3 w-3 text-orange-500" />;
+  return dir === "asc" ? <ArrowUp className="h-3 w-3 text-red-600" /> : <ArrowDown className="h-3 w-3 text-red-600" />;
 }
 
 export default function ClientesPage() {
@@ -115,11 +115,11 @@ export default function ClientesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Clientes</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Clientes</h1>
+          <p className="text-zinc-500 text-sm mt-0.5">
             {loading
               ? "Carregando..."
-              : `${clientes.length} clientes · ${filtered.length} exibidos`}
+              : `${clientes.length.toLocaleString("pt-BR")} clientes · ${filtered.length.toLocaleString("pt-BR")} exibidos`}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={fetchClientes} disabled={loading}>
@@ -135,25 +135,25 @@ export default function ClientesPage() {
             label: "Total Clientes",
             value: loading ? "—" : clientes.length.toString(),
             icon: Users,
-            color: "text-blue-500",
+            color: "text-zinc-400",
           },
           {
             label: "Total Atendimentos",
             value: loading ? "—" : totals.atendimentos.toLocaleString("pt-BR"),
             icon: TrendingUp,
-            color: "text-orange-500",
+            color: "text-red-600",
           },
           {
             label: "Total Faturado",
             value: loading ? "—" : formatCurrency(totals.faturado),
             icon: DollarSign,
-            color: "text-green-500",
+            color: "text-emerald-600",
           },
           {
             label: "A Receber",
             value: loading ? "—" : formatCurrency(totals.pendente),
             icon: Clock,
-            color: "text-yellow-500",
+            color: "text-zinc-400",
           },
         ].map(({ label, value, icon: Icon, color }) => (
           <Card key={label} className="relative overflow-hidden">
@@ -273,7 +273,7 @@ export default function ClientesPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/atendimentos?cliente_id=${cliente.id}`}
-                        className="flex items-center gap-1 text-orange-500 hover:text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="flex items-center gap-1 text-red-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                         title="Ver histórico"
                       >
                         <ArrowRight className="h-4 w-4" />

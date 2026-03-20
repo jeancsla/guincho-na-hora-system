@@ -40,19 +40,28 @@ export default function AtendimentoDetailPage() {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-64 w-full" />
+      <div className="space-y-5 max-w-3xl">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1.5">
+            <div className="skeleton-shimmer h-6 w-48 rounded" />
+            <div className="skeleton-shimmer h-4 w-28 rounded" />
+          </div>
+          <div className="skeleton-shimmer h-8 w-28 rounded" />
+        </div>
+        <div className="skeleton-shimmer h-64 w-full rounded-lg" />
       </div>
     );
   }
 
   if (!atendimento) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">Atendimento não encontrado.</p>
-        <Link href="/atendimentos" className="text-primary underline mt-2 inline-block">
-          Voltar à lista
+      <div className="flex flex-col items-center gap-3 py-20 text-zinc-400">
+        <svg className="h-12 w-12 text-zinc-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        <p className="text-sm font-medium">Atendimento não encontrado.</p>
+        <Link href="/atendimentos" className="text-xs text-red-600 hover:text-red-700 font-medium">
+          ← Voltar à lista
         </Link>
       </div>
     );
@@ -60,10 +69,10 @@ export default function AtendimentoDetailPage() {
 
   if (isEdit) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
-          <h2 className="text-lg font-semibold">Editar Atendimento</h2>
-          <p className="text-sm text-muted-foreground">{atendimento.numero_atendimento}</p>
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Editar Atendimento</h1>
+          <p className="text-sm text-zinc-500 mt-0.5">{atendimento.numero_atendimento}</p>
         </div>
         <AtendimentoForm atendimento={atendimento} />
       </div>
@@ -71,28 +80,30 @@ export default function AtendimentoDetailPage() {
   }
 
   return (
-    <div className="space-y-4 max-w-3xl">
-      <div className="flex items-center justify-between">
+    <div className="space-y-5 max-w-3xl">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Atendimento {atendimento.numero_atendimento}</h2>
-          <p className="text-sm text-muted-foreground">{formatDate(atendimento.data)}</p>
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900">
+            Atendimento {atendimento.numero_atendimento}
+          </h1>
+          <p className="text-sm text-zinc-500 mt-0.5">{formatDate(atendimento.data)}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           {atendimento.status_pagamento !== "pago" && atendimento.status_pagamento !== "cancelado" && (
-            <Button variant="outline" size="sm" onClick={() => setPaymentOpen(true)}>
-              <CheckCircle className="h-4 w-4 mr-1 text-green-600" />
+            <Button variant="outline" size="sm" onClick={() => setPaymentOpen(true)} className="hover:border-green-300 hover:text-green-700">
+              <CheckCircle className="h-4 w-4 mr-1.5 text-green-600" />
               Marcar como Pago
             </Button>
           )}
           {atendimento.status_pagamento !== "cancelado" && (
-            <Button variant="outline" size="sm" onClick={() => generateRecibo(atendimento)}>
-              <FileText className="h-4 w-4 mr-1" />
+            <Button variant="outline" size="sm" onClick={() => generateRecibo(atendimento)} className="hover:border-zinc-300">
+              <FileText className="h-4 w-4 mr-1.5" />
               Gerar Recibo
             </Button>
           )}
-          <Button variant="outline" size="sm" asChild>
+          <Button size="sm" asChild className="bg-zinc-950 hover:bg-zinc-800 text-white">
             <Link href={`/atendimentos/${id}?edit=true`}>
-              <Edit className="h-4 w-4 mr-1" />
+              <Edit className="h-4 w-4 mr-1.5" />
               Editar
             </Link>
           </Button>
