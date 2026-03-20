@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { startOfMonth, endOfMonth, subMonths, format, parseISO } from "date-fns";
+import { z } from "zod";
+
+const QuerySchema = z.object({
+  mes: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/, "mes must be YYYY-MM format")
+    .optional(),
+});
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -10,12 +18,15 @@ export async function GET(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { searchParams } = new URL(request.url);
-  const mesParam = searchParams.get("mes"); // YYYY-MM
+  const parsed = QuerySchema.safeParse(Object.fromEntries(new URL(request.url).searchParams));
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+  }
+
+  const { mes: mesParam } = parsed.data;
 
   let start: Date;
   let end: Date;
-
   if (mesParam) {
     const ref = parseISO(`${mesParam}-01`);
     start = startOfMonth(ref);
@@ -30,39 +41,69 @@ export async function GET(request: NextRequest) {
   const today = format(new Date(), "yyyy-MM-dd");
   const d7 = format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd");
 
-  // Fetch all atendimentos for the period (excluding cancelled)
-  const { data: atendimentos, error } = await supabase
-    .from("atendimentos")
-    .select(
-      `*, cliente:clientes(id, nome), motorista:motoristas(id, nome), equipamento:equipamentos(id, tipo), veiculo:veiculos(id, modelo)`
-    )
-    .gte("data", startStr)
-    .lte("data", endStr)
-    .neq("status_pagamento", "cancelado")
-    .order("data", { ascending: false });
+  // Start of the 12-month window for receitaMensal
+  const inicio12Meses = format(startOfMonth(subMonths(new Date(), 11)), "yyyy-MM-dd");
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // 4 concurrent queries instead of 15 sequential
+  const [periodResult, twelveMonthResult, vencimentosResult, ultimosResult] = await Promise.all([
+    // Period atendimentos (all statuses, with joins for top-10 aggregation)
+    supabase
+      .from("atendimentos")
+      .select(
+        "id, valor, status_pagamento, data_vencimento, cliente:clientes(id, nome), motorista:motoristas(id, nome), veiculo:veiculos(id, modelo), equipamento:equipamentos(id, tipo), numero_atendimento, data, local_retirada, local_entrega, equipamento_id, motorista_id, veiculo_id, cliente_id, numero_pedido, nota_fiscal, data_pagamento, metodo_pagamento, observacoes, created_at, updated_at, created_by, updated_by"
+      )
+      .gte("data", startStr)
+      .lte("data", endStr),
 
-  const all = atendimentos ?? [];
+    // Last 12 months lightweight — one query, aggregate in-memory
+    supabase
+      .from("atendimentos")
+      .select("data, valor")
+      .gte("data", inicio12Meses)
+      .neq("status_pagamento", "cancelado"),
+
+    // Upcoming vencimentos (next 7 days)
+    supabase
+      .from("atendimentos")
+      .select("*, cliente:clientes(id, nome), motorista:motoristas(id, nome)")
+      .eq("status_pagamento", "pendente")
+      .gte("data_vencimento", today)
+      .lte("data_vencimento", d7)
+      .order("data_vencimento", { ascending: true })
+      .limit(10),
+
+    // Latest 10 atendimentos
+    supabase
+      .from("atendimentos")
+      .select("*, cliente:clientes(id, nome), motorista:motoristas(id, nome)")
+      .order("created_at", { ascending: false })
+      .limit(10),
+  ]);
+
+  if (periodResult.error)
+    return NextResponse.json({ error: periodResult.error.message }, { status: 500 });
+  if (twelveMonthResult.error)
+    return NextResponse.json({ error: twelveMonthResult.error.message }, { status: 500 });
+
+  const all = periodResult.data ?? [];
+  const nonCancelled = all.filter((a) => a.status_pagamento !== "cancelado");
 
   // KPIs
-  const totalAtendimentos = all.length;
-  const receitaTotal = all.reduce((sum, a) => sum + Number(a.valor), 0);
+  const totalAtendimentos = nonCancelled.length;
+  const receitaTotal = nonCancelled.reduce((s, a) => s + Number(a.valor), 0);
   const ticketMedio = totalAtendimentos > 0 ? receitaTotal / totalAtendimentos : 0;
-  const totalAReceber = all
+  const totalAReceber = nonCancelled
     .filter((a) => a.status_pagamento === "pendente" || a.status_pagamento === "vencido")
-    .reduce((sum, a) => sum + Number(a.valor), 0);
-  const atendimentosVencidos = all.filter(
+    .reduce((s, a) => s + Number(a.valor), 0);
+  const atendimentosVencidos = nonCancelled.filter(
     (a) =>
-      a.status_pagamento === "pendente" &&
-      a.data_vencimento &&
-      a.data_vencimento < today
+      a.status_pagamento === "pendente" && a.data_vencimento && a.data_vencimento < today
   ).length;
 
-  // Receita por cliente (top 10)
+  // Top-10 clients
   const clienteMap = new Map<string, number>();
-  all.forEach((a) => {
-    const nome = a.cliente?.nome ?? "Desconhecido";
+  nonCancelled.forEach((a) => {
+    const nome = (a.cliente as { nome?: string } | null)?.nome ?? "Desconhecido";
     clienteMap.set(nome, (clienteMap.get(nome) ?? 0) + Number(a.valor));
   });
   const receitaPorCliente = Array.from(clienteMap.entries())
@@ -70,76 +111,49 @@ export async function GET(request: NextRequest) {
     .sort((a, b) => b.valor - a.valor)
     .slice(0, 10);
 
-  // Receita por motorista
+  // Drivers
   const motoristaMap = new Map<string, number>();
-  all.forEach((a) => {
-    const nome = a.motorista?.nome ?? "Desconhecido";
+  nonCancelled.forEach((a) => {
+    const nome = (a.motorista as { nome?: string } | null)?.nome ?? "Desconhecido";
     motoristaMap.set(nome, (motoristaMap.get(nome) ?? 0) + Number(a.valor));
   });
   const receitaPorMotorista = Array.from(motoristaMap.entries())
     .map(([nome, valor]) => ({ nome, valor }))
     .sort((a, b) => b.valor - a.valor);
 
-  // Receita mensal (últimos 12 meses)
-  const mesesPromises = Array.from({ length: 12 }, (_, i) => {
+  // Receita mensal (in-memory from the single 12-month fetch)
+  const monthBuckets: Record<string, number> = {};
+  const months12 = Array.from({ length: 12 }, (_, i) => {
     const d = subMonths(new Date(), 11 - i);
-    return { mes: format(d, "MMM/yy"), start: format(startOfMonth(d), "yyyy-MM-dd"), end: format(endOfMonth(d), "yyyy-MM-dd") };
+    const key = format(d, "yyyy-MM");
+    const label = format(d, "MMM/yy");
+    monthBuckets[key] = 0;
+    return { key, label };
   });
 
-  const receitaMensal = await Promise.all(
-    mesesPromises.map(async ({ mes, start: s, end: e }) => {
-      const { data } = await supabase
-        .from("atendimentos")
-        .select("valor")
-        .gte("data", s)
-        .lte("data", e)
-        .neq("status_pagamento", "cancelado");
-      const valor = (data ?? []).reduce((sum, a) => sum + Number(a.valor), 0);
-      return { mes, valor };
-    })
-  );
+  for (const row of twelveMonthResult.data ?? []) {
+    const key = (row.data as string).slice(0, 7); // YYYY-MM
+    if (key in monthBuckets) monthBuckets[key] += Number(row.valor);
+  }
 
-  // Distribuição de status
+  const receitaMensal = months12.map(({ key, label }) => ({ mes: label, valor: monthBuckets[key] }));
+
+  // Status distribution
   const statusCounts = { pendente: 0, pago: 0, vencido: 0, cancelado: 0 };
   const statusValues = { pendente: 0, pago: 0, vencido: 0, cancelado: 0 };
 
-  // Include cancelled for distribution
-  const { data: allForStatus } = await supabase
-    .from("atendimentos")
-    .select("status_pagamento, valor, data_vencimento")
-    .gte("data", startStr)
-    .lte("data", endStr);
-
-  (allForStatus ?? []).forEach((a) => {
+  all.forEach((a) => {
     let status = a.status_pagamento as keyof typeof statusCounts;
-    // Check if should be vencido
-    if (status === "pendente" && a.data_vencimento && a.data_vencimento < today) {
-      status = "vencido";
+    if (status === "pendente" && a.data_vencimento && a.data_vencimento < today) status = "vencido";
+    if (status in statusCounts) {
+      statusCounts[status] += 1;
+      statusValues[status] += Number(a.valor);
     }
-    statusCounts[status] = (statusCounts[status] ?? 0) + 1;
-    statusValues[status] = (statusValues[status] ?? 0) + Number(a.valor);
   });
 
   const distribuicaoStatus = (Object.keys(statusCounts) as Array<keyof typeof statusCounts>).map(
     (s) => ({ status: s, total: statusCounts[s], valor: statusValues[s] })
   );
-
-  // Próximos vencimentos (7 dias)
-  const { data: proximosVencimentos } = await supabase
-    .from("atendimentos")
-    .select(`*, cliente:clientes(id, nome), motorista:motoristas(id, nome)`)
-    .eq("status_pagamento", "pendente")
-    .gte("data_vencimento", today)
-    .lte("data_vencimento", d7)
-    .order("data_vencimento", { ascending: true })
-    .limit(10);
-
-  // Últimos atendimentos
-  const { data: ultimosAtendimentos } = await supabase
-    .from("atendimentos")
-    .select(`*, cliente:clientes(id, nome), motorista:motoristas(id, nome)`)
-    .order("created_at", { ascending: false })
-    .limit(10);
 
   return NextResponse.json({
     totalAtendimentos,
@@ -151,7 +165,7 @@ export async function GET(request: NextRequest) {
     receitaPorMotorista,
     receitaMensal,
     distribuicaoStatus,
-    proximosVencimentos: proximosVencimentos ?? [],
-    ultimosAtendimentos: ultimosAtendimentos ?? [],
+    proximosVencimentos: vencimentosResult.data ?? [],
+    ultimosAtendimentos: ultimosResult.data ?? [],
   });
 }

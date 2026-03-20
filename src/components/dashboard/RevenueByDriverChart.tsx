@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
@@ -44,12 +36,18 @@ export function RevenueByDriverChart({ data, loading }: Props) {
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="nome" tick={{ fontSize: 12 }} />
-              <YAxis tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v) => formatCurrency(Number(v))} />
-              <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+            <BarChart data={data} margin={{ right: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e4e4e7" />
+              <XAxis dataKey="nome" tick={{ fontSize: 11, fill: "#71717a" }} />
+              <YAxis
+                tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
+                tick={{ fontSize: 11, fill: "#71717a" }}
+              />
+              <Tooltip
+                formatter={(v) => formatCurrency(Number(v))}
+                contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
+              />
+              <Bar dataKey="valor" name="Receita" fill="#18181b" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

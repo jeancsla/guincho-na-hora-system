@@ -11,11 +11,12 @@ interface Props {
   loading?: boolean;
 }
 
+// Semantic colors kept intentional (green = money in, red = overdue, gray = neutral)
 const STATUS_COLORS: Record<StatusPagamento, string> = {
-  pago: "#22c55e",
-  pendente: "#eab308",
-  vencido: "#ef4444",
-  cancelado: "#94a3b8",
+  pago: "#16a34a",
+  pendente: "#a1a1aa",
+  vencido: "#dc2626",
+  cancelado: "#e4e4e7",
 };
 
 const STATUS_LABELS: Record<StatusPagamento, string> = {
@@ -70,17 +71,18 @@ export function PaymentStatusChart({ data, loading }: Props) {
                 paddingAngle={3}
                 dataKey="value"
               >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                {chartData.map((entry, i) => (
+                  <Cell key={`cell-${i}`} fill={entry.fill} strokeWidth={0} />
                 ))}
               </Pie>
               <Tooltip
                 formatter={(v, _name, props) => [
-                  `${Number(v)} atendimentos (${formatCurrency(Number(props?.payload?.valor ?? 0))})`,
+                  `${Number(v)} atend. (${formatCurrency(Number(props?.payload?.valor ?? 0))})`,
                   String(props?.name ?? ""),
                 ]}
+                contentStyle={{ border: "1px solid #e4e4e7", borderRadius: 6 }}
               />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
             </PieChart>
           </ResponsiveContainer>
         )}

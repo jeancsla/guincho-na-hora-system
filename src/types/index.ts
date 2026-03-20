@@ -108,6 +108,40 @@ export interface DashboardStats {
   ultimosAtendimentos: Atendimento[];
 }
 
+// ---- Dashboard Analytics (vehicle revenue, YoY, YTD, collection rate) ----
+
+export interface VehicleYTD {
+  id: string;
+  label: string;
+  valor: number;
+  atendimentos: number;
+}
+
+export interface MonthlyVehiclePoint {
+  mes: string;
+  [veiculoLabel: string]: number | string;
+}
+
+export interface YearComparisonPoint {
+  mes: string;
+  anoAtual: number;
+  anoAnterior: number;
+}
+
+export interface DashboardAnalytics {
+  ytd: {
+    total: number;
+    atendimentos: number;
+    ticketMedio: number;
+    porVeiculo: VehicleYTD[];
+  };
+  veiculos: string[];
+  receitaMensalPorVeiculo: MonthlyVehiclePoint[];
+  comparacaoAnual: YearComparisonPoint[];
+  taxaCobranca: { pago: number; pendente: number; vencido: number; total: number; taxaCobranca: number };
+  ticketMedioMensal: Array<{ mes: string; valor: number }>;
+}
+
 export type MetodoPagamento =
   | "Pix"
   | "Boleto"
