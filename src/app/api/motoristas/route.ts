@@ -1,6 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+type AtendimentoRow = {
+  motorista_id: string | null;
+  valor: number | null;
+  data: string | null;
+  status_pagamento: string | null;
+};
+
+async function fetchAllAtendimentos(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const PAGE = 1000;
+  const all: AtendimentoRow[] = [];
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("atendimentos")
+      .select("motorista_id, valor, data, status_pagamento")
+      .range(from, from + PAGE - 1);
+
+    if (error) return { data: null, error: error.message };
+    all.push(...(data as AtendimentoRow[]));
+    if (!data || data.length < PAGE) break;
+    from += PAGE;
+  }
+
+  return { data: all, error: null };
+}
+
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
 
@@ -12,7 +39,6 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") ?? "";
 
-  // Fetch motoristas with their veiculo
   let query = supabase
     .from("motoristas")
     .select("*, veiculo:veiculos(id, modelo, placa)")
@@ -22,27 +48,22 @@ export async function GET(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Aggregate atendimentos per motorista
-  const { data: atendStats, error: statsError } = await supabase
-    .from("atendimentos")
-    .select("motorista_id, valor, data, status_pagamento");
+  const { data: allStats, error: statsError } = await fetchAllAtendimentos(supabase);
+  if (statsError) return NextResponse.json({ error: statsError }, { status: 500 });
 
-  if (statsError) return NextResponse.json({ error: statsError.message }, { status: 500 });
+  type StatEntry = {
+    total_atendimentos: number;
+    valor_total: number;
+    valor_pendente: number;
+    valor_pago: number;
+    ultimo_atendimento: string | null;
+  };
 
-  type StatMap = Record<
-    string,
-    {
-      total_atendimentos: number;
-      valor_total: number;
-      valor_pendente: number;
-      valor_pago: number;
-      ultimo_atendimento: string | null;
-    }
-  >;
+  const statMap: Record<string, StatEntry> = {};
 
-  const statMap: StatMap = {};
-  for (const row of atendStats ?? []) {
+  for (const row of allStats ?? []) {
     if (!row.motorista_id) continue;
+
     if (!statMap[row.motorista_id]) {
       statMap[row.motorista_id] = {
         total_atendimentos: 0,
@@ -52,15 +73,18 @@ export async function GET(request: NextRequest) {
         ultimo_atendimento: null,
       };
     }
-    const v = Number(row.valor ?? 0);
+
     const entry = statMap[row.motorista_id];
+    const v = Number(row.valor ?? 0);
+
     if (row.status_pagamento !== "cancelado") {
       entry.total_atendimentos += 1;
       entry.valor_total += v;
       if (row.status_pagamento === "pago") entry.valor_pago += v;
       else entry.valor_pendente += v;
     }
-    if (!entry.ultimo_atendimento || row.data > entry.ultimo_atendimento) {
+
+    if (row.data && (!entry.ultimo_atendimento || row.data > entry.ultimo_atendimento)) {
       entry.ultimo_atendimento = row.data;
     }
   }
