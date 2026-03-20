@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import type { Atendimento } from "@/types";
 import { AtendimentoForm } from "@/components/atendimentos/AtendimentoForm";
@@ -26,7 +26,7 @@ export default function AtendimentoDetailPage() {
   const [loading, setLoading] = useState(true);
   const [paymentOpen, setPaymentOpen] = useState(false);
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/atendimentos/${id}`);
@@ -34,9 +34,9 @@ export default function AtendimentoDetailPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   if (loading) {
     return (

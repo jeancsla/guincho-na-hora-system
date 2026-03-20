@@ -120,5 +120,24 @@ export type MetodoPagamento =
 export interface ClienteStats extends Cliente {
   total_atendimentos: number;
   valor_total: number;
+  valor_pendente: number;
+  valor_pago: number;
   ultimo_atendimento: string | null;
+}
+
+export interface MotoristaStats extends Motorista {
+  total_atendimentos: number;
+  valor_total: number;
+  valor_pendente: number;
+  valor_pago: number;
+  ultimo_atendimento: string | null;
+}
+
+export interface VeiculoStats extends Veiculo {
+  total_atendimentos: number;
+  valor_total: number;
+  valor_pendente: number;
+  valor_pago: number;
+  ultimo_atendimento: string | null;
+  motoristas: string[];
 }
