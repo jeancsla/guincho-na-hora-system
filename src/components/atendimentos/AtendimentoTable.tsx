@@ -178,7 +178,7 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
 
   if (loading) {
     return (
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white dark:bg-zinc-900 dark:border-zinc-800 overflow-hidden">
         <Table2>
           <TableHeader2>
             <TableRow2>
@@ -212,7 +212,7 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
       <Table2>
         <TableHeader2>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow2 key={headerGroup.id} className="bg-zinc-50/70 hover:bg-zinc-50/70">
+            <TableRow2 key={headerGroup.id} className="bg-zinc-50/70 dark:bg-zinc-800/50 hover:bg-zinc-50/70 dark:hover:bg-zinc-800/50">
               {headerGroup.headers.map((header) => (
                 <TableHead2 key={header.id} className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
                   {header.isPlaceholder
@@ -227,8 +227,8 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
           {table.getRowModel().rows.length === 0 ? (
             <TableRow2>
               <TableCell2 colSpan={columns.length}>
-                <div className="flex flex-col items-center gap-2 py-16 text-zinc-400">
-                  <svg className="h-10 w-10 text-zinc-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex flex-col items-center gap-2 py-16 text-zinc-400 dark:text-zinc-500">
+                  <svg className="h-10 w-10 text-zinc-200 dark:text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                   <p className="text-sm font-medium">Nenhum atendimento encontrado</p>
@@ -240,7 +240,7 @@ export function AtendimentoTable({ data, loading, onMarkPaid, onCancel }: Props)
             table.getRowModel().rows.map((row) => (
               <TableRow2
                 key={row.id}
-                className="table-row-hover cursor-pointer hover:bg-zinc-50 transition-colors"
+                className="table-row-hover cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
                 onClick={() => router.push(`/atendimentos/${row.original.id}`)}
               >
                 {row.getVisibleCells().map((cell) => (

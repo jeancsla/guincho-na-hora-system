@@ -51,16 +51,16 @@ export default function DashboardPage() {
 
       {/* ── Page header ─────────────────────────────────────────────────────── */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">Acompanhe os indicadores operacionais e financeiros</p>
+        <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Dashboard</h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Acompanhe os indicadores operacionais e financeiros</p>
       </div>
 
       {/* ── Section: Period KPIs ─────────────────────────────────────────────── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-semibold text-zinc-900">Visão do Mês</h2>
-            <p className="text-xs text-zinc-400 mt-0.5">Indicadores do período selecionado</p>
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Visão do Mês</h2>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Indicadores do período selecionado</p>
           </div>
           <Select value={mes} onValueChange={setMes}>
             <SelectTrigger className="w-48">
@@ -137,8 +137,8 @@ export default function DashboardPage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-semibold text-zinc-900">Análise Anual</h2>
-            <p className="text-xs text-zinc-400 mt-0.5">Receita por veículo, comparativo e tendências</p>
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Análise Anual</h2>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Receita por veículo, comparativo e tendências</p>
           </div>
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
             <SelectTrigger className="w-32">

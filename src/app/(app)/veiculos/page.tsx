@@ -27,7 +27,7 @@ type SortDir = "asc" | "desc";
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   disponivel: { label: "Disponível", className: "bg-green-500/10 text-green-600 border-green-500/20" },
-  em_uso: { label: "Em Uso", className: "bg-zinc-100 text-zinc-700 border-zinc-200" },
+  em_uso: { label: "Em Uso", className: "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700" },
   manutencao: { label: "Manutenção", className: "bg-red-500/10 text-red-600 border-red-500/20" },
 };
 
@@ -119,8 +119,8 @@ export default function VeiculosPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Veículos</h1>
-          <p className="text-zinc-500 text-sm mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Veículos</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
             {loading
               ? "Carregando..."
               : `${veiculos.length.toLocaleString("pt-BR")} veículos · ${totals.emUso} em uso`}

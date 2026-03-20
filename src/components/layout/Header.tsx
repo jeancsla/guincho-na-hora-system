@@ -80,8 +80,8 @@ export function Header({ userEmail }: HeaderProps) {
   return (
     <header
       className={cn(
-        "h-16 bg-white flex items-center justify-between px-6 shrink-0 transition-shadow duration-200",
-        scrolled ? "shadow-sm border-b border-zinc-100" : "border-b border-zinc-100"
+        "h-16 bg-white dark:bg-zinc-900 flex items-center justify-between px-6 shrink-0 transition-shadow duration-200",
+        scrolled ? "shadow-sm border-b border-zinc-100 dark:border-zinc-800" : "border-b border-zinc-100 dark:border-zinc-800"
       )}
     >
       {/* Breadcrumb */}
@@ -93,8 +93,8 @@ export function Header({ userEmail }: HeaderProps) {
               className={cn(
                 "font-medium",
                 i === crumbs.length - 1
-                  ? "text-zinc-900"
-                  : "text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
+                  ? "text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
               )}
             >
               {crumb.label}
@@ -119,7 +119,7 @@ export function Header({ userEmail }: HeaderProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <div className="flex flex-col gap-0.5 p-2">
-            <p className="text-xs font-semibold text-zinc-900">Conta</p>
+            <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Conta</p>
             <p className="text-xs text-muted-foreground truncate">{userEmail ?? "—"}</p>
           </div>
           <DropdownMenuSeparator />
@@ -133,7 +133,7 @@ export function Header({ userEmail }: HeaderProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={handleLogout}
-            className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer gap-2"
+            className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950 cursor-pointer gap-2"
           >
             <LogOut className="h-4 w-4" />
             Sair

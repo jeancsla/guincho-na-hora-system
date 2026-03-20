@@ -90,6 +90,13 @@
     background: #a1a1aa;
   }
 
+  .dark ::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
+
   /* Better focus rings — red accent */
   :focus-visible {
     outline: 2px solid hsl(0, 72%, 51%);
@@ -128,6 +135,16 @@
   );
   background-size: 400px 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #27272a 25%,
+    #3f3f46 50%,
+    #27272a 75%
+  );
+  background-size: 400px 100%;
 }
 
 /* ── Stat card number count-up feel ─────────────────────────────────────────*/

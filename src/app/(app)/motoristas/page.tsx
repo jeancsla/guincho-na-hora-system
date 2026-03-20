@@ -119,8 +119,8 @@ export default function MotoristasPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Motoristas</h1>
-          <p className="text-zinc-500 text-sm mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Motoristas</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
             {loading
               ? "Carregando..."
               : `${motoristas.length.toLocaleString("pt-BR")} motoristas · ${filtered.length.toLocaleString("pt-BR")} exibidos`}
@@ -223,7 +223,7 @@ export default function MotoristasPage() {
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
                           <User className="h-4 w-4 text-red-600" />
                         </div>
                         <div>

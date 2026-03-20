@@ -115,8 +115,8 @@ export default function ClientesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Clientes</h1>
-          <p className="text-zinc-500 text-sm mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Clientes</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
             {loading
               ? "Carregando..."
               : `${clientes.length.toLocaleString("pt-BR")} clientes · ${filtered.length.toLocaleString("pt-BR")} exibidos`}

@@ -50,10 +50,10 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
   const hasActiveFilters = activeCount > 0;
 
   return (
-    <div className={`bg-white border rounded-lg p-4 space-y-3 transition-colors ${hasActiveFilters ? "border-zinc-300 shadow-sm" : ""}`}>
+    <div className={`bg-white dark:bg-zinc-900 border dark:border-zinc-800 rounded-lg p-4 space-y-3 transition-colors ${hasActiveFilters ? "border-zinc-300 dark:border-zinc-600 shadow-sm" : ""}`}>
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
         <Input
           placeholder="Buscar por nº atendimento, NF, nº pedido, observação..."
           value={filters.search}
@@ -63,7 +63,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
         {filters.search && (
           <button
             onClick={() => set("search", "")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -122,7 +122,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
         </Select>
 
         <div className="space-y-1">
-          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide px-0.5">De</p>
+          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wide px-0.5">De</p>
           <Input
             type="date"
             value={filters.data_inicio}
@@ -131,7 +131,7 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
           />
         </div>
         <div className="space-y-1">
-          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide px-0.5">Até</p>
+          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wide px-0.5">Até</p>
           <Input
             type="date"
             value={filters.data_fim}
@@ -145,11 +145,11 @@ export function AtendimentoFilters({ filters, onChange, onReset }: Props) {
             variant="outline"
             size="sm"
             onClick={onReset}
-            className="h-9 text-zinc-500 hover:text-zinc-800 hover:border-zinc-400 gap-1.5 self-end"
+            className="h-9 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-500 gap-1.5 self-end"
           >
             <X className="h-3.5 w-3.5" />
             Limpar
-            <span className="inline-flex items-center justify-center bg-zinc-900 text-white text-[10px] font-bold rounded-full h-4 w-4">
+            <span className="inline-flex items-center justify-center bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-bold rounded-full h-4 w-4">
               {activeCount}
             </span>
           </Button>

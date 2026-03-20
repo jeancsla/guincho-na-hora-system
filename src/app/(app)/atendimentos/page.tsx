@@ -76,8 +76,8 @@ export default function AtendimentosPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Atendimentos</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Atendimentos</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
             {loading ? (
               <span className="inline-block skeleton-shimmer h-3.5 w-40 rounded" />
             ) : data ? (
@@ -88,14 +88,14 @@ export default function AtendimentosPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportCsv} className="text-zinc-600 hover:text-zinc-900 hover:border-zinc-300">
+          <Button variant="outline" size="sm" onClick={handleExportCsv} className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-300 dark:hover:border-zinc-600">
             <Download className="h-4 w-4 mr-1.5" />
             Exportar CSV
           </Button>
           <Button
             size="sm"
             onClick={() => router.push("/atendimentos/novo")}
-            className="bg-zinc-950 hover:bg-zinc-800 text-white font-medium"
+            className="bg-zinc-950 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 text-white font-medium"
           >
             <Plus className="h-4 w-4 mr-1.5" />
             Novo Atendimento
@@ -121,9 +121,9 @@ export default function AtendimentosPage() {
       {/* Pagination */}
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between pt-1">
-          <p className="text-xs text-zinc-400 tabular-nums">
-            Página <span className="font-semibold text-zinc-700">{data.page}</span> de{" "}
-            <span className="font-semibold text-zinc-700">{data.totalPages}</span>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums">
+            Página <span className="font-semibold text-zinc-700 dark:text-zinc-300">{data.page}</span> de{" "}
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300">{data.totalPages}</span>
             {" · "}
             {data.total.toLocaleString("pt-BR")} registros
           </p>
@@ -147,7 +147,7 @@ export default function AtendimentosPage() {
                   variant={p === page ? "default" : "outline"}
                   size="sm"
                   onClick={() => setPage(p)}
-                  className={`h-8 w-8 p-0 text-xs font-medium ${p === page ? "bg-zinc-950 hover:bg-zinc-800 text-white" : "hover:border-zinc-300"}`}
+                  className={`h-8 w-8 p-0 text-xs font-medium ${p === page ? "bg-zinc-950 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 text-white" : "hover:border-zinc-300 dark:hover:border-zinc-600"}`}
                 >
                   {p}
                 </Button>
