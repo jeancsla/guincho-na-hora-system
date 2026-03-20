@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { PaymentStatusBadge } from "@/components/atendimentos/PaymentStatusBadge";
 import { PaymentModal } from "@/components/atendimentos/PaymentModal";
-import { Edit, CheckCircle } from "lucide-react";
+import { Edit, CheckCircle, FileText } from "lucide-react";
+import { generateRecibo } from "@/lib/pdf/recibo";
 import Link from "next/link";
 
 export default function AtendimentoDetailPage() {
@@ -81,6 +82,12 @@ export default function AtendimentoDetailPage() {
             <Button variant="outline" size="sm" onClick={() => setPaymentOpen(true)}>
               <CheckCircle className="h-4 w-4 mr-1 text-green-600" />
               Marcar como Pago
+            </Button>
+          )}
+          {atendimento.status_pagamento !== "cancelado" && (
+            <Button variant="outline" size="sm" onClick={() => generateRecibo(atendimento)}>
+              <FileText className="h-4 w-4 mr-1" />
+              Gerar Recibo
             </Button>
           )}
           <Button variant="outline" size="sm" asChild>

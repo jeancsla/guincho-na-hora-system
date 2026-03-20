@@ -11,6 +11,7 @@ import {
   Wrench,
   DollarSign,
   ChevronRight,
+  Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/veiculos", label: "Veículos", icon: Car },
   { href: "/equipamentos", label: "Equipamentos", icon: Wrench },
   { href: "/financeiro", label: "Financeiro", icon: DollarSign },
+  { href: "/importar", label: "Importar Dados", icon: Upload },
 ];
 
 export function Sidebar() {

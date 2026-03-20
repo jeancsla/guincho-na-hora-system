@@ -116,3 +116,9 @@ export type MetodoPagamento =
   | "Cheque"
   | "Cartão de Crédito"
   | "Cartão de Débito";
+
+export interface ClienteStats extends Cliente {
+  total_atendimentos: number;
+  valor_total: number;
+  ultimo_atendimento: string | null;
+}
